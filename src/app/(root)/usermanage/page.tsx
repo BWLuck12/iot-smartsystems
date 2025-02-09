@@ -144,11 +144,11 @@ export default function Page() {
         <table className="w-full border-collapse bg-white">
           <thead>
             <tr className="bg-gray-200">
-              <th className="px-4 py-2 border">รหัสนักศึกษา</th>
-              <th className="px-4 py-2 border">ชื่อ</th>
-              <th className="px-4 py-2 border">นามสกุล</th>
-              <th className="px-4 py-2 border">อีเมล</th>
-              <th className="px-4 py-2 border">แก้ไข</th>
+              <th className="px-4 py-2 border text-right">รหัสนักศึกษา</th>
+              <th className="px-4 py-2 border text-left">ชื่อ</th>
+              <th className="px-4 py-2 border text-left">นามสกุล</th>
+              <th className="px-4 py-2 border text-left">อีเมล</th>
+              <th className="px-4 py-2 border text-right">แก้ไข</th>
             </tr>
           </thead>
           <tbody>
