@@ -155,11 +155,11 @@ export default function Page() {
             {filteredStudents.length > 0 ? (
               filteredStudents.map((student) => (
                 <tr key={student.Student_ID} className="hover:bg-gray-100 text-center">
-                  <td className="px-4 py-2 border">{student.Student_ID}</td>
-                  <td className="px-4 py-2 border">{student.First_name}</td>
-                  <td className="px-4 py-2 border">{student.Last_name}</td>
-                  <td className="px-4 py-2 border">{student.Email}</td>
-                  <td className="px-4 py-2 border">
+                  <td className="px-4 py-2 border text-right">{student.Student_ID}</td>
+                  <td className="px-4 py-2 border text-left">{student.First_name}</td>
+                  <td className="px-4 py-2 border text-left">{student.Last_name}</td>
+                  <td className="px-4 py-2 border text-left">{student.Email}</td>
+                  <td className="px-4 py-2 border text-right">
                     <button
                       className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600"
                       onClick={() => handleEdit(student)}
