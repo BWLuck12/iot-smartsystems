@@ -1,6 +1,5 @@
 "use client";
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 // กำหนด type สำหรับนักศึกษา (สำหรับ TypeScript)
 type Student = {
@@ -127,7 +126,7 @@ export default function Page() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
+    <div className="min-h-screen bg-gray-100 p-4 sm:p-6 md:p-8 lg:p-10 2xl:p-12">
       {/* ช่องค้นหาข้อมูลนักศึกษา */}
       <div className="mb-4">
         <input
@@ -135,7 +134,7 @@ export default function Page() {
           placeholder="ค้นหานักศึกษา (รหัส, ชื่อ, นามสกุล, อีเมล)"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded"
+          className="w-full p-2 sm:p-3 md:p-4 border border-gray-300 rounded"
         />
       </div>
 
@@ -154,7 +153,7 @@ export default function Page() {
           <tbody>
             {filteredStudents.length > 0 ? (
               filteredStudents.map((student) => (
-                <tr key={student.Student_ID} className="hover:bg-gray-100 text-center">
+                <tr key={student.Student_ID} className="hover:bg-gray-100">
                   <td className="px-4 py-2 border text-right">{student.Student_ID}</td>
                   <td className="px-4 py-2 border text-left">{student.First_name}</td>
                   <td className="px-4 py-2 border text-left">{student.Last_name}</td>
@@ -183,8 +182,10 @@ export default function Page() {
       {/* Edit Modal สำหรับแก้ไขข้อมูลนักศึกษา */}
       {modalOpen && selectedStudent && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
-          <div className="bg-white w-11/12 h-4/5 p-6 rounded-lg relative overflow-auto">
-            {/* ปุ่มปิด Edit Modal */}
+          <div className="bg-white w-11/12 sm:w-11/12 md:w-3/4 lg:w-2/3 2xl:w-1/2
+                       h-4/5 sm:h-4/5 md:h-3/4 lg:h-2/3 2xl:h-auto
+                       p-6 sm:p-8 md:p-10 lg:p-12 rounded-lg relative overflow-auto">
+            
             <div className="flex flex-col">
               {/* รูปโปรไฟล์ */}
               <div className="flex justify-center">
@@ -208,11 +209,11 @@ export default function Page() {
               </div>
               {/* เส้นกั้น */}
               <div className="flex justify-center my-4">
-                <hr className="border-t-2 w-full border-gray-300" />
+                <hr className="border-t-2 w-full sm:w-full md:w-full lg:w-full border-gray-300" />
               </div>
               {/* ฟอร์มแก้ไขข้อมูล */}
               <div className="space-y-4">
-                <form className="grid grid-cols-4 gap-2">
+                <form className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">รหัสนักศึกษา</label>
                     <input
@@ -264,7 +265,8 @@ export default function Page() {
                       onChange={(e) =>
                         setSelectedStudent({ ...selectedStudent, Position: e.target.value })
                       }
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2">
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                    >
                       <option value="อาจารย์">อาจารย์</option>
                       <option value="นักศึกษา">นักศึกษา</option>
                       <option value="บุคลากร">บุคลากร</option>
@@ -312,7 +314,7 @@ export default function Page() {
                 <div className="flex justify-center my-4">
                   <hr className="border-t-2 w-full border-gray-300" />
                 </div>
-                <form className="grid grid-cols-4 gap-2">
+                <form className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">อีเมล</label>
                     <input
@@ -405,7 +407,7 @@ export default function Page() {
                 <div className="flex justify-center my-4">
                   <hr className="border-t-2 w-full border-gray-300" />
                 </div>
-                <form className="grid grid-cols-4 gap-2">
+                <form className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">ชื่อผู้ปกครอง</label>
                     <input
@@ -441,41 +443,41 @@ export default function Page() {
                   </div>
                 </form>
               </div>
-              {/* ปุ่มยืนยันและยกเลิกอยู่ตรงล่างขวาของ pop-up */}
-              <div className="absolute bottom-4 right-4 space-x-2">
+               {/* ปุ่มยืนยันและยกเลิกอยู่ตรงล่างขวาของ pop-up */}
+            <div className="space-x-4 mt-7 text-end">
                 <button
-                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                  className="bg-blue-500 text-white px-4 py-2 rounded sm:px-5 sm:py-2 md:px-6 md:py-3 lg:px-8 lg:py-3 2xl:px-10 2xl:py-3"
                   onClick={() => setConfirmModalOpen(true)}
                 >
                   ยืนยัน
                 </button>
                 <button
-                  className="bg-red-500 text-white px-4 py-2 rounded"
+                  className="bg-red-500 text-white px-4 py-2 rounded sm:px-5 sm:py-2 md:px-6 md:py-3 lg:px-8 lg:py-3 2xl:px-10 2xl:py-3"
                   onClick={handleCloseModal}
                 >
                   ยกเลิก
                 </button>
               </div>
             </div>
-          </div>
+          </div>    
         </div>
       )}
 
       {/* Confirmation Modal สำหรับยืนยันการเปลี่ยนแปลง */}
       {confirmModalOpen && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-gray-800 bg-opacity-75 ">
-          <div className="bg-white w-80 p-4 rounded-lg">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-gray-800 bg-opacity-75">
+          <div className="bg-white w-80 sm:w-80 md:w-96 lg:w-[28rem] 2xl:w-[32rem] p-4 sm:p-6 md:p-8 rounded-lg">
             <h3 className="text-lg font-medium">ยืนยันการบันทึกข้อมูล</h3>
             <p className="mt-2">คุณต้องการบันทึกข้อมูลใช่หรือไม่?</p>
             <div className="mt-4 flex justify-end space-x-4">
               <button
-                className="bg-blue-500 text-white px-4 py-2 rounded"
+                className="bg-blue-500 text-white px-4 py-2 rounded sm:px-5 sm:py-2 md:px-6 md:py-3 lg:px-8 lg:py-3 2xl:px-10 2xl:py-3"
                 onClick={handleConfirm}
               >
                 ตกลง
               </button>
               <button
-                className="bg-red-500 text-white px-4 py-2 rounded"
+                className="bg-red-500 text-white px-4 py-2 rounded sm:px-5 sm:py-2 md:px-6 md:py-3 lg:px-8 lg:py-3 2xl:px-10 2xl:py-3"
                 onClick={() => setConfirmModalOpen(false)}
               >
                 ยกเลิก
