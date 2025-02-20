@@ -5,6 +5,32 @@ import Step1 from "./Step1Login";
 import Step2 from "./Step2PersonalInfo";
 import Step3 from "./Step3Preview";
 
+// ตัวอย่างคอมโพเนนต์ PopupModal สำหรับแสดงข้อความเตือน
+interface PopupModalProps {
+  message: string;
+  onClose: () => void;
+
+  
+}
+
+function PopupModal({ message, onClose }: PopupModalProps) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
+      <div className="bg-white p-6 rounded shadow-lg max-w-sm w-full">
+        <p className="text-gray-700 mb-4 text-center">{message}</p>
+        <div className="text-center">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            ตกลง
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const StepperForm = () => {
   const Subjectsteps = [
     {
@@ -15,7 +41,7 @@ const StepperForm = () => {
       id: "Step 2",
       name: "Personal Information",
     },
-    { id: "Step 3", name: "Check Up" },
+    { id: "Step 3", name: "Preview" },
   ];
 
   const totalSteps = 4;
@@ -29,6 +55,7 @@ const StepperForm = () => {
     first_name: "",
     last_name: "",
     nick_name: "",
+    profile_image: "",
     email: "",
     phone: "",
     line_id: "",
@@ -40,6 +67,22 @@ const StepperForm = () => {
     guardian_lname: "",
     guardian_phone: "",
   });
+
+  // State สำหรับควบคุม pop-up
+  const [popupOpen, setPopupOpen] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
+
+  // ฟังก์ชันเปิด pop-up พร้อมกำหนดข้อความ
+  const showPopup = (message: string) => {
+    setPopupMessage(message);
+    setPopupOpen(true);
+  };
+
+  // ฟังก์ชันปิด pop-up
+  const closePopup = () => {
+    setPopupOpen(false);
+    setPopupMessage("");
+  };
 
   // ฟังก์ชันตรวจสอบข้อมูลที่กรอกในแต่ละ Step
   const isStepValid = (currentStep: number): boolean => {
@@ -59,11 +102,11 @@ const StepperForm = () => {
           formData.first_name !== "" &&
           formData.last_name !== "" &&
           formData.nick_name !== "" &&
+          formData.profile_image !== "" &&
           formData.email !== "" &&
           formData.phone !== "" &&
           formData.line_id !== "" &&
           formData.position !== "" &&
-          // formData.teleiphone !== "" &&
           formData.date_of_birth !== "" &&
           formData.blood_group !== "" &&
           formData.guardian_fname !== "" &&
@@ -77,7 +120,9 @@ const StepperForm = () => {
     }
   };
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -91,20 +136,20 @@ const StepperForm = () => {
       // ตรวจสอบว่าเป็นการเปลี่ยนไปยังขั้นตอนถัดไปและ formData password กับ confirmPassword ไม่ตรงกัน
       if (newStep > step) {
         if (formData.password !== formData.confirmPassword) {
-          alert("รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน กรุณาตรวจสอบข้อมูล");
+          showPopup("รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน กรุณาตรวจสอบข้อมูล");
           return; // หยุดการเปลี่ยนขั้นตอน
         }
 
         if (!isStepValid(step)) {
           // หากขั้นตอนปัจจุบันยังไม่ครบ จะไม่ให้ไปขั้นตอนถัดไป
-          alert("กรุณากรอกข้อมูลให้ครบก่อนที่จะไปยังขั้นตอนถัดไป");
+          showPopup("กรุณากรอกข้อมูลให้ครบก่อนที่จะไปยังขั้นตอนถัดไป");
           return; // หยุดการเปลี่ยนขั้นตอน
         }
       }
 
-      // เมื่อถึง Step 3 ให้แสดง alert และไม่เปลี่ยนไปยังขั้นตอนถัดไป
+      // เมื่อถึง Step 3 ให้แสดง pop-up ว่าสำเร็จ และไม่เปลี่ยนไปยังขั้นตอนถัดไป
       if (newStep === totalSteps) {
-        alert("สำเร็จ");
+        showPopup("ลงทะเบียนเสร็จสิ้น");
         return; // หยุดการเปลี่ยนขั้นตอน
       }
 
@@ -113,78 +158,90 @@ const StepperForm = () => {
   };
 
   return (
-      <div className=" p-[100px] min-h-screen bg-primary">
-        {/* Stepper Navigation */}
+    <div className="p-[100px] min-h-screen bg-primary">
+      {/* Stepper Navigation */}
+      <nav aria-label="Progress" className="mt-6">
+        <ol role="list" className="space-y-4 lg:flex lg:space-x-8 lg:space-y-0">
+          {Subjectsteps.map((Subjectsteps, index) => (
+            <li
+              key={Subjectsteps.name}
+              className="lg:flex-1 border-stroke bg-slate-400 shadow-default dark:border-strokedark dark:bg-boxdark px-10 py-5 rounded-[20px] cursor-pointer"
+              onClick={() => handleStepChange(index + 1)}
+            >
+              {step > index + 1 ? (
+                <div className="group flex w-full flex-col border-l-4 border-primary py-2 pl-4 transition-colors lg:border-l-0 lg:border-t-4 lg:pb-0 lg:pl-0 lg:pt-4">
+                  <span className="text-sm font-medium text-primary transition-colors ">
+                    {Subjectsteps.id}
+                  </span>
+                  <span className="text-sm font-medium">
+                    {Subjectsteps.name}
+                  </span>
+                </div>
+              ) : step === index + 1 ? (
+                <div
+                  className="flex w-full flex-col border-l-4 border-primary py-2 pl-4 lg:border-l-0 lg:border-t-4 lg:pb-0 lg:pl-0 lg:pt-4"
+                  aria-current="step"
+                >
+                  <span className="text-sm font-medium text-primary">
+                    {Subjectsteps.id}
+                  </span>
+                  <span className="text-sm font-medium">
+                    {Subjectsteps.name}
+                  </span>
+                </div>
+              ) : (
+                <div className="group flex w-full flex-col border-l-4 border-gray-200 py-2 pl-4 transition-colors lg:border-l-0 lg:border-t-4 lg:pb-0 lg:pl-0 lg:pt-4">
+                  <span className="text-sm font-medium text-gray-500 transition-colors">
+                    {Subjectsteps.id}
+                  </span>
+                  <span className="text-sm font-medium">
+                    {Subjectsteps.name}
+                  </span>
+                </div>
+              )}
+            </li>
+          ))}
+        </ol>
+      </nav>
 
-        <nav aria-label="Progress" className="mt-6"> {/*สีพื้นหลังของเมนู*/}
-          <ol role="list" className="space-y-4 lg:flex lg:space-x-8 lg:space-y-0">
-            {Subjectsteps.map((Subjectsteps, index) => (
-              <li
-                key={Subjectsteps.name}
-                className="lg:flex-1 border-stroke bg-slate-400 shadow-default dark:border-strokedark dark:bg-boxdark px-10 py-5 rounded-[20px] cursor-pointer"
-                onClick={() => handleStepChange(index + 1)}
-              >
-                {step > index + 1 ? (
-                  <div className="group flex w-full flex-col border-l-4 border-primary py-2 pl-4 transition-colors lg:border-l-0 lg:border-t-4 lg:pb-0 lg:pl-0 lg:pt-4">
-                    <span className="text-sm font-medium text-primary transition-colors ">
-                      {Subjectsteps.id}
-                    </span>
-                    <span className="text-sm font-medium">{Subjectsteps.name}</span>
-                  </div>
-                ) : step === index + 1 ? (
-                  <div
-                    className="flex w-full flex-col border-l-4 border-primary py-2 pl-4 lg:border-l-0 lg:border-t-4 lg:pb-0 lg:pl-0 lg:pt-4"
-                    aria-current="step"
-                  >
-                    <span className="text-sm font-medium text-primary">
-                      {Subjectsteps.id}
-                    </span>
-                    <span className="text-sm font-medium">{Subjectsteps.name}</span>
-                  </div>
-                ) : (
-                  <div className="group flex w-full flex-col border-l-4 border-gray-200 py-2 pl-4 transition-colors lg:border-l-0 lg:border-t-4 lg:pb-0 lg:pl-0 lg:pt-4">
-                    <span className="text-sm font-medium text-gray-500 transition-colors">
-                      {Subjectsteps.id}
-                    </span>
-                    <span className="text-sm font-medium">{Subjectsteps.name}</span>
-                  </div>
-                )}
-              </li>
-            ))}
-          </ol>
-        </nav>
+      {/* Step 1: Username, Password */}
+      {step === 1 && (
+        <Step1 formData={formData} handleInputChange={handleInputChange} />
+      )}
 
-        {/* Step 1: Username, Password */}
-        {step === 1 && (
-          <Step1 formData={formData} handleInputChange={handleInputChange} />
-        )}
+      {/* Step 2: Personal Information */}
+      {step === 2 && (
+        <Step2 formData={formData} handleInputChange={handleInputChange} />
+      )}
 
-        {/* Step 2: Personal Information */}
-        {step === 2 && (
-          <Step2 formData={formData} handleInputChange={handleInputChange} />
-        )}
+      {/* Step 3: Preview Data */}
+      {step === 3 && <Step3 formData={formData} />}
 
-        {/* Step 3: Preview Data */}
-        {step === 3 && <Step3 formData={formData} />}
-
-        {/* Step control buttons */}
-        <div className="flex justify-between mt-6"> {/*สีพื้นหลังของปุ่ม */}
-          <button
-            onClick={() => handleStepChange(step - 1)}
-            disabled={step === 1}
-            className="py-2 px-4 rounded-full bg-gray-300 text-gray-700 hover:bg-gray-400"
-          >
-            Back
-          </button>
-          <button
-            onClick={() => handleStepChange(step + 1)}
-            // disabled={!isStepValid(step)}
-            className="py-2 px-4 rounded-full bg-blue-600 text-white hover:bg-blue-700"
-          >
-            Next
-          </button>
-        </div>
+      {/* Step control buttons */}
+      <div className="flex justify-between mt-6">
+        <button
+          onClick={() => handleStepChange(step - 1)}
+          disabled={step === 1}
+          className="py-2 px-4 rounded-full bg-gray-300 text-gray-700 hover:bg-gray-400"
+        >
+          Back
+        </button>
+        <button
+          onClick={() => handleStepChange(step + 1)}
+          className="py-2 px-4 rounded-full bg-blue-600 text-white hover:bg-blue-700"
+        >
+          Next
+        </button>
       </div>
+
+      {/* แสดง PopupModal เมื่อ popupOpen เป็น true */}
+      {popupOpen && (
+        <PopupModal
+          message={popupMessage}
+          onClose={closePopup}
+        />
+      )}
+    </div>
   );
 };
 
